@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Generate Pairing Code</h1>
+        <p>Create a new pairing code to connect with other devices</p>
+    </div>
+
+    <div class="form-section">
+        <div class="form-group">
+            <label for="sessionId">Your Session ID (Starts with Nexty~)</label>
+            <input type="text" id="sessionId" placeholder="Nexty~your_session_id_here" class="form-input">
+            <small class="form-help">Session ID must start with "Nexty~"</small>
+        </div>
+
+        <div class="form-group">
+            <label for="deviceInfo">Device Info (Optional)</label>
+            <textarea id="deviceInfo" placeholder='{"type": "whatsapp_bot", "platform": "heroku"}' class="form-textarea"></textarea>
+        </div>
+
+        <button onclick="generateCode()" class="btn btn-primary btn-large">Generate Pairing Code</button>
+    </div>
+
+    <div id="result" class="result-container" style="display: none;">
+        <h3>Pairing Code Generated!</h3>
+        <div class="code-display">
+            <span id="generatedCode" class="code"></span>
+        </div>
+        <p id="codeMessage" class="message"></p>
+        <div class="code-info">
+            <p><strong>Session ID:</strong> <span id="resultSessionId"></span></p>
+            <p><strong>Expires in:</strong> <span id="expiryTime">10 minutes</span></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
