@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <h1 class="hero-title">Welcome to PairCode</h1>
+        <p class="hero-subtitle">Connect your devices securely with unique pairing codes</p>
+        
+        <div class="hero-features">
+            <div class="feature-card">
+                <h3>🔐 Secure Pairing</h3>
+                <p>Generate unique 6-digit codes for secure device connections</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ Fast & Easy</h3>
+                <p>Quick pairing process with Session ID starting with Nexty~</p>
+            </div>
+            <div class="feature-card">
+                <h3>📱 WhatsApp Compatible</h3>
+                <p>Perfect for connecting WhatsApp bots and devices</p>
+            </div>
+        </div>
+
+        <div class="hero-actions">
+            <a href="/generate" class="btn btn-primary">Generate Code</a>
+            <a href="/pair" class="btn btn-secondary">Pair Device</a>
+        </div>
+    </div>
+</div>
+
+<div class="info-section">
+    <div class="container">
+        <h2>How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Generate Code</h3>
+                <p>Create a unique 6-digit pairing code with your Session ID</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Share Code</h3>
+                <p>Share the code with the device you want to connect with</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Pair Devices</h3>
+                <p>Enter the code on the other device to establish connection</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
