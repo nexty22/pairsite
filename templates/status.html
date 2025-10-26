@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Check Pairing Status</h1>
+        <p>Monitor your active connections and pairing codes</p>
+    </div>
+
+    <div class="form-section">
+        <div class="form-group">
+            <label for="statusSessionId">Your Session ID (Starts with Nexty~)</label>
+            <input type="text" id="statusSessionId" placeholder="Nexty~your_session_id_here" class="form-input">
+        </div>
+
+        <button onclick="checkStatus()" class="btn btn-primary">Check Status</button>
+        <button onclick="refreshStatus()" class="btn btn-secondary" style="display: none;" id="refreshBtn">Refresh</button>
+    </div>
+
+    <div id="statusResult" class="status-container" style="display: none;">
+        <div class="status-section">
+            <h3>Active Pairing Codes</h3>
+            <div id="activeCodesList" class="codes-list"></div>
+        </div>
+
+        <div class="status-section">
+            <h3>Current Connections</h3>
+            <div id="connectionsList" class="connections-list"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
