@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox - Prince Pairing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📥 Your Inbox</h1>
+            <p>Session ID and connection details</p>
+        </div>
+
+        <div class="card">
+            <div class="inbox-header">
+                <h2>WhatsApp Connection</h2>
+                <span class="status-badge {{ 'connected' if status == 'connected' else 'waiting' }}">
+                    {{ status|title }}
+                </span>
+            </div>
+
+            <div class="inbox-message">
+                <div class="message-header">
+                    <strong>PrinceBot</strong>
+                    <span class="time">Now</span>
+                </div>
+                <div class="message-content">
+                    <p><strong>Session ID:</strong></p>
+                    <div class="session-box">{{ session_id }}</div>
+                    <p>Use this Session ID in your bot configuration.</p>
+                    
+                    {% if status == 'connected' %}
+                    <div class="success-alert">
+                        ✅ WhatsApp connected successfully!
+                    </div>
+                    {% else %}
+                    <div class="info-alert">
+                        ⏳ Waiting for WhatsApp connection...
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="inbox-actions">
+                <button onclick="copySessionId()" class="btn btn-primary">Copy Session ID</button>
+                <a href="/" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copySessionId() {
+            const sessionId = "{{ session_id }}";
+            navigator.clipboard.writeText(sessionId).then(() => {
+                alert('Session ID copied to clipboard!');
+            });
+        }
+        
+        // Auto-refresh if not connected
+        {% if status != 'connected' %}
+        setTimeout(() => {
+            location.reload();
+        }, 5000);
+        {% endif %}
+    </script>
+</body>
+</html>
