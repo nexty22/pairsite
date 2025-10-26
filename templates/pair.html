@@ -1,35 +1,93 @@
-{% extends "layout.html" %}
-
-{% block content %}
-<div class="container">
-    <div class="page-header">
-        <h1>Pair Device</h1>
-        <p>Connect with another device using a pairing code</p>
-    </div>
-
-    <div class="form-section">
-        <div class="form-group">
-            <label for="pairingCode">Pairing Code</label>
-            <input type="text" id="pairingCode" placeholder="Enter 6-digit code" class="form-input" maxlength="6">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pairing Code - Prince Pairing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 Pairing Code Generated</h1>
+            <p>Use this code in WhatsApp Link Device</p>
         </div>
 
-        <div class="form-group">
-            <label for="pairSessionId">Your Session ID (Starts with Nexty~)</label>
-            <input type="text" id="pairSessionId" placeholder="Nexty~your_session_id_here" class="form-input">
-        </div>
+        <div class="card">
+            <div class="pairing-code-section">
+                <h2>Your Pairing Code:</h2>
+                <div class="pairing-code">{{ pairing_code }}</div>
+                <p class="code-instruction">Enter this code in WhatsApp Web/Desktop Link Device section</p>
+            </div>
 
-        <button onclick="pairDevice()" class="btn btn-primary btn-large">Pair Device</button>
-    </div>
+            <div class="status-section">
+                <h3>Connection Status:</h3>
+                <div id="statusMessage" class="status-waiting">
+                    ⏳ Waiting for QR scan...
+                </div>
+                <div class="progress-steps">
+                    <div class="step active">1. Code Generated</div>
+                    <div class="step" id="step2">2. QR Scanned</div>
+                    <div class="step" id="step3">3. Connected</div>
+                </div>
+            </div>
 
-    <div id="pairResult" class="result-container" style="display: none;">
-        <h3 id="pairResultTitle"></h3>
-        <p id="pairResultMessage" class="message"></p>
-        <div id="pairSuccessInfo" style="display: none;">
-            <div class="success-info">
-                <p><strong>Connected with:</strong> <span id="pairedWithSession"></span></p>
-                <p><strong>Connection ID:</strong> <span id="connectionId"></span></p>
+            <div class="session-info">
+                <h3>Your Session ID:</h3>
+                <div class="session-id">{{ session_id }}</div>
+                <p>This will be sent to your inbox once connected</p>
+            </div>
+
+            <div class="actions">
+                <a href="/inbox?phone={{ phone_number }}" class="btn btn-secondary">Check Inbox</a>
+                <button onclick="checkStatus()" class="btn btn-primary">Refresh Status</button>
             </div>
         </div>
     </div>
-</div>
-{% endblock %}
+
+    <script>
+        const phoneNumber = "{{ phone_number }}";
+        
+        async function checkStatus() {
+            try {
+                const response = await fetch(`/check-pairing-status?phone_number=${phoneNumber}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateStatus(data);
+                }
+            } catch (error) {
+                console.error('Status check failed:', error);
+            }
+        }
+        
+        function updateStatus(data) {
+            const statusElement = document.getElementById('statusMessage');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+            
+            if (data.status === 'scanning') {
+                statusElement.innerHTML = '✅ QR Code Scanned!<br>Waiting for device connection...';
+                statusElement.className = 'status-scanning';
+                step2.classList.add('active');
+            } else if (data.status === 'connected') {
+                statusElement.innerHTML = '✅ Device Connected Successfully!';
+                statusElement.className = 'status-connected';
+                step2.classList.add('active');
+                step3.classList.add('active');
+                
+                // Redirect to success page
+                setTimeout(() => {
+                    window.location.href = `/success?phone=${phoneNumber}&session_id=${data.session_id}`;
+                }, 2000);
+            }
+        }
+        
+        // Auto-check status every 3 seconds
+        setInterval(checkStatus, 3000);
+        
+        // Initial check
+        checkStatus();
+    </script>
+</body>
+</html>
