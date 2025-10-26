@@ -5,7 +5,7 @@ import time
 import os
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'dev-key-123')
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-key-12345')
 
 # Simple storage
 pairing_data = {}
@@ -69,29 +69,32 @@ def check_status():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Simple API routes
+# API routes for WhatsApp bot
 @app.route('/api/verify', methods=['POST'])
 def api_verify():
     try:
         data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+            
         pair_code = data.get('pairing_code', '')
-        phone = data.get('phone_number', '')
         
         # Find phone by pair code
         target_phone = None
-        for ph, session_data in pairing_data.items():
+        for phone, session_data in pairing_data.items():
             if session_data['pair_code'] == pair_code:
-                target_phone = ph
+                target_phone = phone
                 break
         
         if not target_phone:
-            return jsonify({'error': 'Invalid code'}), 404
+            return jsonify({'error': 'Invalid pairing code'}), 404
         
         pairing_data[target_phone]['status'] = 'scanning'
         
         return jsonify({
             'success': True,
-            'session_id': pairing_data[target_phone]['session_id']
+            'session_id': pairing_data[target_phone]['session_id'],
+            'phone': target_phone
         })
         
     except Exception as e:
@@ -101,17 +104,20 @@ def api_verify():
 def api_connect():
     try:
         data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+            
         pair_code = data.get('pairing_code', '')
         
         # Find phone by pair code
         target_phone = None
-        for ph, session_data in pairing_data.items():
+        for phone, session_data in pairing_data.items():
             if session_data['pair_code'] == pair_code:
-                target_phone = ph
+                target_phone = phone
                 break
         
         if not target_phone:
-            return jsonify({'error': 'Invalid code'}), 404
+            return jsonify({'error': 'Invalid pairing code'}), 404
         
         pairing_data[target_phone]['status'] = 'connected'
         
