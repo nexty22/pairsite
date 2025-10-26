@@ -1,48 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <title>WhatsApp Pairing</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prince Pairing - WhatsApp Link Device</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f2f5;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+            background: #ffeaea;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🤴 Prince Pairing</h1>
-            <p>Connect your WhatsApp using pairing code</p>
-        </div>
-
-        <div class="card">
-            <h2>Enter your phone number</h2>
-            <p class="subtitle">e.g., +92309266810</p>
-            
-            {% if error %}
-            <div class="error-message">{{ error }}</div>
-            {% endif %}
-            
-            <form action="/start-pairing" method="POST" class="phone-form">
-                <div class="input-group">
-                    <input type="tel" name="phone_number" placeholder="+92309266810" required class="phone-input">
-                </div>
-                <button type="submit" class="btn btn-primary">Get Pairing Code</button>
-            </form>
-        </div>
-
-        <div class="info-card">
-            <h3>📱 How it works:</h3>
-            <ol>
-                <li>Enter your WhatsApp phone number</li>
-                <li>Get 6-digit pairing code</li>
-                <li>Use code in WhatsApp Link Device</li>
-                <li>Receive Session ID in your inbox</li>
-                <li>Your bot will be connected!</li>
-            </ol>
-        </div>
-
-        <div class="footer">
-            <p>Keep your Session ID secure • PrinceBot</p>
-        </div>
+    <div class="card">
+        <h2>WhatsApp Pairing</h2>
+        <p>Enter your phone number to get pairing code</p>
+        
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        <form action="/start-pairing" method="POST">
+            <input type="tel" name="phone_number" placeholder="+92309266810" required>
+            <button type="submit">Get Pairing Code</button>
+        </form>
     </div>
 </body>
 </html>
