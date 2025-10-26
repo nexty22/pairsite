@@ -4,19 +4,38 @@
     <title>Pairing Code</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: Arial, sans-serif;
-            max-width: 500px;
-            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             padding: 20px;
-            background: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
         }
         .card {
             background: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 20px;
         }
         .code {
             font-size: 48px;
@@ -24,35 +43,71 @@
             color: #25D366;
             letter-spacing: 10px;
             margin: 20px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed #25D366;
         }
         .status {
             padding: 15px;
             margin: 20px 0;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-weight: bold;
         }
         .waiting {
             background: #fff3cd;
             color: #856404;
+            border: 1px solid #ffeaa7;
         }
         .connected {
             background: #d4edda;
             color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .session-id {
+            background: #2d3748;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            word-break: break-all;
+            font-size: 14px;
+        }
+        a {
+            color: #667eea;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+        }
+        a:hover {
+            background: #667eea;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>Your Pairing Code</h2>
-        <div class="code">{{ pairing_code }}</div>
-        <p>Use this code in WhatsApp Link Device</p>
-        
-        <div class="status waiting" id="status">
-            ⏳ Waiting for connection...
+    <div class="container">
+        <div class="card">
+            <h1>🔗 Pairing Code</h1>
+            <p>Use this code in WhatsApp Link Device</p>
+            
+            <div class="code">{{ pairing_code }}</div>
+            
+            <div class="status waiting" id="status">
+                ⏳ Waiting for connection...
+            </div>
+            
+            <p><strong>Your Session ID:</strong></p>
+            <div class="session-id">{{ session_id }}</div>
+            
+            <a href="/inbox?phone={{ phone_number }}">📥 Check Inbox</a>
+            <br>
+            <a href="/">🏠 Back to Home</a>
         </div>
-        
-        <p><strong>Session ID:</strong><br>{{ session_id }}</p>
-        
-        <a href="/inbox?phone={{ phone_number }}">Check Inbox</a>
     </div>
 
     <script>
@@ -63,13 +118,14 @@
                 
                 if (data.status === 'connected') {
                     document.getElementById('status').className = 'status connected';
-                    document.getElementById('status').innerHTML = '✅ Connected!';
+                    document.getElementById('status').innerHTML = '✅ Connected Successfully!';
                 }
             } catch (error) {
                 console.log('Error checking status');
             }
         }
         
+        // Check every 3 seconds
         setInterval(checkStatus, 3000);
     </script>
 </body>
